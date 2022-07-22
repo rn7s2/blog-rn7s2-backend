@@ -1,6 +1,6 @@
 # blog-rn7s2-backend
 
-A simple and stupid ASP.NET Core backend for [https://github.com/rn7s2/blog-rn7s2/](blog-rn7s2).
+A simple and stupid ASP.NET Core backend for [blog-rn7s2](https://github.com/rn7s2/blog-rn7s2/).
 
 ### License
 ```
