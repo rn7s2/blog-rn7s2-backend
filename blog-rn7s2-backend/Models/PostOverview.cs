@@ -2,6 +2,7 @@
 {
     public class PostOverview
     {
+        public int ID { get; set; }
         public string Title { get; set; }
         public string Author { get; set; }
         public DateTime Updated { get; set; }

@@ -24,6 +24,7 @@ namespace blog_rn7s2_backend.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError);
             return _context.Posts.Select(post => new PostOverview
             {
+                ID = post.ID,
                 Title = post.Title,
                 Author = post.Author,
                 Abstract = post.Abstract,
