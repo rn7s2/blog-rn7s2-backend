@@ -7,6 +7,12 @@ namespace blog_rn7s2_backend.Controllers
     [Route("api/pages")]
     public class PagesController : ControllerBase
     {
+        [HttpGet("config")]
+        public List<PageConfig> GetPagesConfig()
+        {
+            return new List<PageConfig>();
+        }
+
         [HttpGet("{name}")]
         public Page Get(string name)
         {
