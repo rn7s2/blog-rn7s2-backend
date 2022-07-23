@@ -5,6 +5,8 @@ namespace blog_rn7s2_backend.Data
 {
     public class BlogContextSQLite : DbContext
     {
+        public BlogContextSQLite(DbContextOptions<BlogContextSQLite> options) : base(options) { }
+
         public DbSet<Config>? Configs { get; set; }
         public DbSet<Page>? Pages { get; set; }
         public DbSet<Post>? Posts { get; set; }

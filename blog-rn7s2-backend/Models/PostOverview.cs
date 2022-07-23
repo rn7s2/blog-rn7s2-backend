@@ -2,9 +2,9 @@
 {
     public class PostOverview
     {
-        public string Title { get; set; } = string.Empty;
-        public string Author { get; set; } = string.Empty;
-        public DateTime Updated { get; set; } = DateTime.MinValue;
-        public string Abstract { get; set; } = string.Empty;
+        public string Title { get; set; }
+        public string Author { get; set; }
+        public DateTime Updated { get; set; }
+        public string Abstract { get; set; }
     }
 }

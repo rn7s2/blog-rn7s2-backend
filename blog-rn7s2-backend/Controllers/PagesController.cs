@@ -1,4 +1,5 @@
-﻿using blog_rn7s2_backend.Models;
+﻿using blog_rn7s2_backend.Data;
+using blog_rn7s2_backend.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace blog_rn7s2_backend.Controllers
@@ -7,16 +8,41 @@ namespace blog_rn7s2_backend.Controllers
     [Route("api/pages")]
     public class PagesController : ControllerBase
     {
-        [HttpGet("config")]
-        public List<PageConfig> GetPagesConfig()
+        private readonly BlogContextSQLite _context;
+
+        public PagesController(BlogContextSQLite context)
         {
-            return new List<PageConfig>();
+            _context = context;
+        }
+
+        [HttpGet("config")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public ActionResult<List<PageConfig>> GetPagesConfig()
+        {
+            if (_context.Pages == null)
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            return _context.Pages.Select(page => new PageConfig
+            {
+                Name = page.Name,
+                Title = page.Title
+            }).ToList();
         }
 
         [HttpGet("{name}")]
-        public Page Get(string name)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public ActionResult<Page> GetPage(string name)
         {
-            return new Page();
+            if (_context.Pages == null)
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            var results = _context.Pages.Where(page => page.Name == name);
+            if (results.Count() == 0)
+                return NotFound();
+            if (results.Count() > 1)
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            return results.First();
         }
     }
 }

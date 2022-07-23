@@ -1,7 +1,5 @@
 using blog_rn7s2_backend.Data;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Diagnostics;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace blog_rn7s2_backend
 {
@@ -16,22 +14,28 @@ namespace blog_rn7s2_backend
             builder.Services.AddSwaggerGen();
 
             // TODO: Add PostgreSQL/MariaDB support in production mode.
-            if(builder.Environment.IsDevelopment())
+            if (builder.Environment.IsDevelopment())
             {
+                builder.Services.AddDbContext<BlogContextSQLite>(
+                    options => options.UseSqlite(
+                        builder.Configuration.GetConnectionString(nameof(BlogContextSQLite))
+                    )
+                );
             }
             else
             {
+                builder.Services.AddDbContext<BlogContextSQLite>(
+                    options => options.UseSqlite(
+                        builder.Configuration.GetConnectionString(nameof(BlogContextSQLite))
+                    )
+                );
             }
-
-            builder.Services.AddDbContext<BlogContextSQLite>(
-                options => options.UseSqlite(
-                    builder.Configuration.GetConnectionString(nameof(BlogContextSQLite))
-                )
-            );
 
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
             var app = builder.Build();
+
+            CreateDbIfNotExists(app);
 
             if (app.Environment.IsDevelopment())
             {
@@ -43,5 +47,24 @@ namespace blog_rn7s2_backend
             app.MapControllers();
             app.Run();
         }
+
+        private static void CreateDbIfNotExists(IHost host)
+        {
+            using (var scope = host.Services.CreateScope())
+            {
+                var services = scope.ServiceProvider;
+                try
+                {
+                    var context = services.GetRequiredService<BlogContextSQLite>();
+                    DbInitializer.Initialize(context);
+                }
+                catch (Exception ex)
+                {
+                    var logger = services.GetRequiredService<ILogger<Program>>();
+                    logger.LogError(ex, "An error occurred creating the DB.");
+                }
+            }
+        }
+
     }
 }
