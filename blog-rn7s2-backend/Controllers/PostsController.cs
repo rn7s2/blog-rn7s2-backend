@@ -22,7 +22,7 @@ namespace blog_rn7s2_backend.Controllers
         {
             if (_context.Posts == null)
                 return StatusCode(StatusCodes.Status500InternalServerError);
-            return _context.Posts.Select(post => new PostOverview
+            var res = _context.Posts.Select(post => new PostOverview
             {
                 ID = post.ID,
                 Title = post.Title,
@@ -30,6 +30,8 @@ namespace blog_rn7s2_backend.Controllers
                 Abstract = post.Abstract,
                 Updated = post.Updated
             }).ToList();
+            res.Reverse();
+            return res;
         }
 
         [HttpGet("{id}")]
